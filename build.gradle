@@ -1,0 +1,68 @@
+plugins {
+    id 'de.undercouch.download' version '4.1.2'
+    id 'ru.vyarus.use-python' version '2.3.0'
+    id 'application'
+    id 'distribution'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'lol.rox.peepoop.Converter'
+}
+
+dependencies {
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.1.0'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.1.0'
+
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.1'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
+
+    implementation group: 'org.jdbi', name: 'jdbi3-core', version: '3.24.1'
+    implementation group: 'org.jdbi', name: 'jdbi3-sqlite', version: '3.24.1'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.3'
+
+    implementation group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '5.0.4'
+
+}
+
+python {
+    pip 'datasette:0.59.3'
+    pip 'datasette-cluster-map:0.17.1'
+    pip 'datasette-basemap:0.2'
+    pip 'datasette-geojson:0.3.0'
+}
+
+
+task downloadXLS(type: Download) {
+    src 'https://www.berlin.de/sen/uvk/_assets/verkehr/infrastruktur/oeffentliche-toiletten/berliner-toiletten-standorte.xlsx'
+    dest new File(buildDir, 'berliner-toiletten.xlsx')
+    onlyIfModified true
+}
+
+
+task runConverter(type: Exec) {
+    inputs.file downloadXLS.dest
+    outputs.file "$buildDir/toilets.sqlite"
+
+    commandLine  "$buildDir/install/$project.name/bin/$project.name", "--xls", downloadXLS.dest, "--sqlite", "$buildDir/toilets.sqlite"
+}
+
+runConverter.dependsOn downloadXLS, project.tasks.getByName("installDist")
+
+
+task serve(type: PythonTask) {
+    command = "-m datasette " + runConverter.outputs.files.getSingleFile()
+}
+
+serve.dependsOn pipInstall, runConverter
