@@ -57,12 +57,16 @@ task runConverter(type: Exec) {
 
     commandLine  "$buildDir/install/$project.name/bin/$project.name", "--xls", downloadXLS.dest, "--sqlite", "$buildDir/toilets.sqlite"
 }
-
 runConverter.dependsOn downloadXLS, project.tasks.getByName("installDist")
 
 
 task serve(type: PythonTask) {
     command = "-m datasette " + runConverter.outputs.files.getSingleFile()
 }
-
 serve.dependsOn pipInstall, runConverter
+
+
+task dpackage(type: PythonTask) {
+    command = "-m datasette  package " + runConverter.outputs.files.getSingleFile()
+}
+dpackage.dependsOn pipInstall, runConverter
