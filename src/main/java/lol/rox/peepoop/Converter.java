@@ -104,7 +104,7 @@ public class Converter {
         return jdbi;
     }
     
-    record Field(String name, Class type) {
+    record Field(String name, Class<?> type) {
     }
     
     
