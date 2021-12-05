@@ -40,9 +40,11 @@ python {
     pip 'datasette:0.59.4'
     pip 'datasette-cluster-map:0.17.1'
     pip 'datasette-basemap:0.2'
-    pip 'datasette-geojson:0.3.0'
 }
 
+task cleanPython(type: Delete) {
+    delete "$rootDir/.gradle/python"
+}
 
 task downloadXLS(type: Download) {
     src 'https://www.berlin.de/sen/uvk/_assets/verkehr/infrastruktur/oeffentliche-toiletten/berliner-toiletten-standorte.xlsx'
