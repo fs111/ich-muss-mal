@@ -20,7 +20,7 @@ public class Converter {
     
     private static final Logger LOGGER = LogManager.getLogger(Converter.class);
     
-    private static Field[] schema = {//
+    private final static Field[] schema = {//
             f("LavatoryID", String.class),
             f("Description", String.class),
             f("City", String.class),
@@ -51,7 +51,6 @@ public class Converter {
         
         
         Jdbi jdbi = initDatabase(optionSet.valueOf(sqlite));
-        //var fname = "/Users/akelpe/projects/ich-muss-mal/build/berliner-toiletten.xlsx";
         Workbook workbook = new XSSFWorkbook(new File(optionSet.valueOf(xls)));
         
         Sheet sheet = workbook.getSheetAt(0);
@@ -95,7 +94,7 @@ public class Converter {
         
         
         StringBuilder builder = new StringBuilder("create table toilets (");
-        builder.append(String.join(",", Arrays.stream(schema).map(f -> String.format(" %s %s", f.name.toLowerCase(Locale.ROOT), f.type.getSimpleName().toLowerCase(Locale.ROOT))).collect(Collectors.toList())));
+        builder.append(Arrays.stream(schema).map(f -> String.format(" %s %s", f.name.toLowerCase(Locale.ROOT), f.type.getSimpleName().toLowerCase(Locale.ROOT))).collect(Collectors.joining(",")));
         builder.append(")");
         
         LOGGER.debug(builder.toString());
@@ -104,8 +103,7 @@ public class Converter {
         return jdbi;
     }
     
-    record Field(String name, Class<?> type) {
-    }
+    record Field(String name, Class<?> type) {}
     
     
 }
