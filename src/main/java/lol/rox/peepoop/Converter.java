@@ -71,7 +71,8 @@ public class Converter {
         jdbi.useHandle(handle -> {
             String names = Arrays.stream(schema).map(Field::name).collect(Collectors.joining(","));
             String values = Arrays.stream(schema).map(f -> "?").collect(Collectors.joining(","));
-            PreparedBatch preparedBatch = handle.prepareBatch(String.format("insert into toilets (%s) values(%s)", names, values));
+            PreparedBatch preparedBatch = handle.prepareBatch(
+                    String.format("insert into toilets (%s) values(%s)", names, values));
             
             for (int i = startRow; i < sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
@@ -102,7 +103,7 @@ public class Converter {
         
         
         StringBuilder builder = new StringBuilder("create table toilets (");
-        builder.append(Arrays.stream(schema).map(f -> String.format(" %s %s", f.name.toLowerCase(Locale.ROOT), f.type.getSimpleName().toLowerCase(Locale.ROOT))).collect(Collectors.joining(",")));
+        builder.append(Arrays.stream(schema).map(f -> String.format(" %s %s", f.name, f.type.getSimpleName().toLowerCase(Locale.ROOT))).collect(Collectors.joining(",")));
         builder.append(")");
         
         LOGGER.debug(builder.toString());
@@ -112,6 +113,5 @@ public class Converter {
     }
     
     record Field(String name, Class<?> type) {}
-    
     
 }
