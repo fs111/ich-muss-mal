@@ -62,12 +62,12 @@ run.dependsOn downloadXLS
 
 
 task serve(type: PythonTask) {
-    command = "-m datasette " + run.outputs.files.getSingleFile()
+    command = "-m datasette  --metadata metadata.json " + run.outputs.files.getSingleFile()
 }
 serve.dependsOn pipInstall, run
 
 
 task dpackage(type: PythonTask) {
-    command = "-m datasette  package --slim-base-image " + run.outputs.files.getSingleFile()
+    command = "-m datasette  package --metadata metadata.json " + run.outputs.files.getSingleFile()
 }
 dpackage.dependsOn pipInstall, run
