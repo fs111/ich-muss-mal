@@ -38,15 +38,23 @@ public class Converter {
             f("LabelID", String.class),
             f("hasUrinal", boolean.class)};
     
-    private static Field f(String name, Class type) {
+    private static Field f(String name, Class<?> type) {
         return new Field(name, type);
     }
     
     public static void main(String... args) throws Exception {
     
         OptionParser parser = new OptionParser();
-        var xls = parser.accepts("xls").withRequiredArg().required().ofType(String.class).describedAs("path to the xls file to import");
-        var sqlite = parser.accepts("sqlite").withRequiredArg().required().ofType(String.class).describedAs("path to the sqlite db to write to");
+        var xls = parser.accepts("xls")
+                .withRequiredArg()
+                .required()
+                .ofType(String.class)
+                .describedAs("path to the xls file to import");
+        var sqlite = parser.accepts("sqlite")
+                .withRequiredArg()
+                .required()
+                .ofType(String.class)
+                .describedAs("path to the sqlite db to write to");
         OptionSet optionSet = parser.parse(args);
         
         
