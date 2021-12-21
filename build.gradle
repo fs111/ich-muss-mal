@@ -52,23 +52,22 @@ task downloadXLS(type: Download) {
     onlyIfModified true
 }
 
-
-task runConverter(type: Exec) {
+run {
     inputs.file downloadXLS.dest
     outputs.file "$buildDir/toilets.sqlite"
 
-    commandLine  "$buildDir/install/$project.name/bin/$project.name", "--xls", downloadXLS.dest, "--sqlite", "$buildDir/toilets.sqlite"
+    args = [ "--xls", downloadXLS.dest, "--sqlite", "$buildDir/toilets.sqlite"]
 }
-runConverter.dependsOn downloadXLS, project.tasks.getByName("installDist")
+run.dependsOn downloadXLS
 
 
 task serve(type: PythonTask) {
-    command = "-m datasette " + runConverter.outputs.files.getSingleFile()
+    command = "-m datasette " + run.outputs.files.getSingleFile()
 }
-serve.dependsOn pipInstall, runConverter
+serve.dependsOn pipInstall, run
 
 
 task dpackage(type: PythonTask) {
-    command = "-m datasette  package " + runConverter.outputs.files.getSingleFile()
+    command = "-m datasette  package --slim-base-image " + run.outputs.files.getSingleFile()
 }
-dpackage.dependsOn pipInstall, runConverter
+dpackage.dependsOn pipInstall, run
