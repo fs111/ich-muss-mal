@@ -27,13 +27,15 @@ public class Converter {
             f("Street", String.class),
             f("Number", String.class),
             f("PostalCode", String.class),
-            f("County", String.class),
+            f("Country", String.class),
             f("Longitude", double.class),
             f("Latitude", double.class),
             f("isOwnedByWall", boolean.class),
             f("isHandicappedAccessible", boolean.class),
             f("Price", String.class),
+            f("canBePayedWithCoins", boolean.class),
             f("canBePayedInApp", boolean.class),
+            f("canBePayedWithNFC", boolean.class),
             f("hasChangingTable", boolean.class),
             f("LabelID", String.class),
             f("hasUrinal", boolean.class)};
@@ -65,6 +67,9 @@ public class Converter {
     
         NumberFormat germanFormat = NumberFormat.getInstance(Locale.GERMANY);
         DataFormatter formatter = new DataFormatter();
+        
+        checkHeader(sheet, formatter);
+        
     
         int startRow = 4; // 5th row is the first with content
         
@@ -94,6 +99,16 @@ public class Converter {
             }
             preparedBatch.execute();
         });
+    }
+    
+    private static void checkHeader(Sheet sheet, DataFormatter formatter) {
+        Row row = sheet.getRow(3);
+        for (int i = 0 ; i < schema.length; i++) {
+            String name = formatter.formatCellValue(row.getCell(i));
+            if(!schema[i].name.contentEquals(name) ) {
+                throw new IllegalStateException(String.format("schema drift detected. %s!=%s", schema[i].name, name));
+            }
+        }
     }
     
     private static Jdbi initDatabase(String dbPath) {
