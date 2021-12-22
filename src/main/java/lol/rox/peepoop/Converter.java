@@ -59,17 +59,18 @@ public class Converter {
                 .describedAs("path to the sqlite db to write to");
         OptionSet optionSet = parser.parse(args);
         
-        
         Jdbi jdbi = initDatabase(optionSet.valueOf(sqlite));
+        
+        LOGGER.info("reading data from {}", optionSet.valueOf(xls));
         Workbook workbook = new XSSFWorkbook(new File(optionSet.valueOf(xls)));
         
         Sheet sheet = workbook.getSheetAt(0);
     
+        // the data uses "," as the decimal separator not "."
         NumberFormat germanFormat = NumberFormat.getInstance(Locale.GERMANY);
         DataFormatter formatter = new DataFormatter();
         
         checkHeader(sheet, formatter);
-        
     
         int startRow = 4; // 5th row is the first with content
         
@@ -97,11 +98,13 @@ public class Converter {
                 }
                 preparedBatch.add();
             }
-            preparedBatch.execute();
+            int[] counts = preparedBatch.execute();
+            LOGGER.info("imported {} records", Arrays.stream(counts).sum());
         });
     }
     
     private static void checkHeader(Sheet sheet, DataFormatter formatter) {
+        LOGGER.info("comparing header to known schema");
         Row row = sheet.getRow(3);
         for (int i = 0 ; i < schema.length; i++) {
             String name = formatter.formatCellValue(row.getCell(i));
@@ -112,6 +115,8 @@ public class Converter {
     }
     
     private static Jdbi initDatabase(String dbPath) {
+    
+        LOGGER.info("creating database {}", dbPath);
         
         var jdbi = Jdbi.create(String.format("jdbc:sqlite:%s", dbPath)).installPlugin(new SQLitePlugin());
         jdbi.useHandle(handle -> handle.execute("drop table if exists toilets"));
