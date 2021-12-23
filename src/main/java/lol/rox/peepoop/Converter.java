@@ -119,11 +119,13 @@ public class Converter {
         LOGGER.info("creating database {}", dbPath);
         
         var jdbi = Jdbi.create(String.format("jdbc:sqlite:%s", dbPath)).installPlugin(new SQLitePlugin());
+        
         jdbi.useHandle(handle -> handle.execute("drop table if exists toilets"));
         
-        
         StringBuilder builder = new StringBuilder("create table toilets (");
-        builder.append(Arrays.stream(schema).map(f -> String.format(" %s %s", f.name, f.type.getSimpleName().toLowerCase(Locale.ROOT))).collect(Collectors.joining(",")));
+        builder.append(Arrays.stream(schema)
+                .map(f -> String.format(" %s %s", f.name, f.type.getSimpleName().toLowerCase(Locale.ROOT)))
+                .collect(Collectors.joining(",")));
         builder.append(")");
         
         LOGGER.debug(builder.toString());
