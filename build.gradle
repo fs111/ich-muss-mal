@@ -20,16 +20,16 @@ application {
 }
 
 dependencies {
-    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.0'
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.0'
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
 
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.1'
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.35'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.2'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36'
 
-    implementation group: 'org.jdbi', name: 'jdbi3-core', version: '3.27.1'
-    implementation group: 'org.jdbi', name: 'jdbi3-sqlite', version: '3.27.1'
+    implementation group: 'org.jdbi', name: 'jdbi3-core', version: '3.28.0'
+    implementation group: 'org.jdbi', name: 'jdbi3-sqlite', version: '3.28.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.3'
 
     implementation group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '5.0.4'
@@ -37,7 +37,7 @@ dependencies {
 }
 
 python {
-    pip 'datasette:0.60.1'
+    pip 'datasette:0.61.1'
     pip 'datasette-cluster-map:0.17.2'
     pip 'datasette-basemap:0.2'
 }
@@ -68,6 +68,6 @@ serve.dependsOn pipInstall, run
 
 
 task dpackage(type: PythonTask) {
-    command = "-m datasette  package --metadata metadata.json " + run.outputs.files.getSingleFile()
+    command = "-m datasette  package -t ich-muss-mal --metadata metadata.json " + run.outputs.files.getSingleFile()
 }
 dpackage.dependsOn pipInstall, run
