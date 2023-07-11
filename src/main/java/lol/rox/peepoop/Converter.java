@@ -23,6 +23,7 @@ public class Converter {
     private final static Field[] schema = {//
             f("LavatoryID", String.class),
             f("Description", String.class),
+            f("Bezirk", String.class),
             f("City", String.class),
             f("Street", String.class),
             f("Number", String.class),
@@ -30,15 +31,16 @@ public class Converter {
             f("Country", String.class),
             f("Longitude", double.class),
             f("Latitude", double.class),
-            f("isOwnedByWall", boolean.class),
             f("isHandicappedAccessible", boolean.class),
             f("Price", String.class),
             f("canBePayedWithCoins", boolean.class),
             f("canBePayedInApp", boolean.class),
             f("canBePayedWithNFC", boolean.class),
             f("hasChangingTable", boolean.class),
-            f("LabelID", String.class),
-            f("hasUrinal", boolean.class)};
+            f("hasUrinal", boolean.class),
+            f("FID", int.class),
+            f("isOperatedBy", int.class),
+            f("modelTyp", int.class)};
     
     private static Field f(String name, Class<?> type) {
         return new Field(name, type);
