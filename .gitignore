@@ -5,3 +5,10 @@
 build
 
 .idea
+
+# vim java lsp server
+.classpath
+.settings
+.project
+.project
+bin
