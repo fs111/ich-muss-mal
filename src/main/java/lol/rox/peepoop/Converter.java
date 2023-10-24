@@ -65,13 +65,12 @@ public class Converter {
         
         LOGGER.info("reading data from {}", optionSet.valueOf(xls));
         Workbook workbook = new XSSFWorkbook(new File(optionSet.valueOf(xls)));
-        
         Sheet sheet = workbook.getSheetAt(0);
     
         // the data uses "," as the decimal separator not "."
         NumberFormat germanFormat = NumberFormat.getInstance(Locale.GERMANY);
         DataFormatter formatter = new DataFormatter();
-        
+	var evaluator = workbook.getCreationHelper().createFormulaEvaluator();  
         checkHeader(sheet, formatter);
     
         int startRow = 4; // 5th row is the first with content
@@ -87,13 +86,18 @@ public class Converter {
                 int cellNr = 0;
                 for (int j = 0 ; j < schema.length; j++) {
                     Cell cell = row.getCell(j);
-                    Object val = formatter.formatCellValue(cell);
-                    if (schema[cellNr].type == boolean.class) {
-                        val = germanFormat.parse(val.toString()).intValue() == 1;
-                    }
-                    if(schema[cellNr].type == double.class) {
-                        val = String.valueOf(germanFormat.parse(val.toString()).doubleValue());
-                    }
+		    Object val = formatter.formatCellValue(cell);
+
+		    if (cell != null && cell.getCellType() == CellType.FORMULA) {
+			evaluator.evaluateFormulaCell(cell);
+			val = cell.getStringCellValue();
+		    }
+		    if (schema[cellNr].type == boolean.class) {
+			val = germanFormat.parse(val.toString()).intValue() == 1;
+		    }
+		    if(schema[cellNr].type == double.class) {
+			val = String.valueOf(germanFormat.parse(val.toString()).doubleValue());
+		    }
                     
                     preparedBatch.bind(cellNr, val);
                     cellNr++;
