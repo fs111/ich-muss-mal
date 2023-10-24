@@ -3,11 +3,11 @@
 Visualizing Berlin's public bathrooms in [datasette](https://datasette.io). This is a small experiment to learn
 datasette. It uses Berlins open data for [public
 bathrooms](https://daten.berlin.de/datensaetze/standorte-der-%C3%B6ffentlichen-toiletten), imports that into
-[sqlite](https://sqlite.org) using [Apache POI](https://poi.apache.org) and then serserves it via datasette.
+[sqlite](https://sqlite.org) using [Apache POI](https://poi.apache.org) and then serves it via datasette.
 
 ## Running
 
-You need to have Java 17 and a somewhat modern version of python on your system. Then type
+You have to have Java 17 and a somewhat modern version of python on your system. Then type
 
 ```
 ./gradlew serve
