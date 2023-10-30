@@ -33,7 +33,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.21.1'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.20.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.21.1'
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.9'
 
     implementation group: 'org.jdbi', name: 'jdbi3-core', version: '3.39.1'
     implementation group: 'org.jdbi', name: 'jdbi3-sqlite', version: '3.39.1'
