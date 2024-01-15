@@ -3,7 +3,7 @@ plugins {
     id 'ru.vyarus.use-python' version '3.0.0'
     id 'application'
     id 'distribution'
-    id 'com.diffplug.spotless' version "6.23.3"
+    id 'com.diffplug.spotless' version "6.24.0"
 }
 
 repositories {
