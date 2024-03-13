@@ -46,8 +46,8 @@ dependencies {
 }
 
 python {
-    pip 'datasette:1.0a4'
-    pip 'datasette-cluster-map:0.17.2'
+    pip 'datasette:1.0a13'
+    pip 'datasette-cluster-map:0.18.1'
     pip 'datasette-basemap:0.2'
 }
 
